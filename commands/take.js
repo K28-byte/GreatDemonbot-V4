@@ -34,7 +34,7 @@ async function takeCommand(sock, chatId, message, args, replyMessage) {
         // Parse pack and author name from args if provided (e.g., packname | author)
         const textArgs = args.join(' ').split('|');
         const packname = textArgs[0] ? textArgs[0].trim() : '🤖';
-        const author = textArgs[1] ? textArgs[1].trim() : '𝗟𝗮𝗱𝘆_𝗕𝗲𝗹𝗹𝗮🎀';
+        const author = textArgs[1] ? textArgs[1].trim() : 'Emperor🌀;
 
         // Process sticker metadata using webpmux
         const img = new Image();
