@@ -237,7 +237,7 @@ async function rdfwrh(conn, mek, m, { q, reply, pushname }) {
 ┗❐═══════════════════╝
 
 ┏❐═══════════════════╗
-┃     𝗔𝗕𝗢𝗨𝗧 𝗨𝗦
+┃     ABOUT GREAT DEMON
 ╠────────────────────╣
 ┃  𝑚𝑢𝑙𝑡𝑖𝑑𝑒𝑣𝑖𝑐𝑒 𝑤ℎ𝑎𝑡𝑠𝑎𝑝𝑝 𝑏𝑜𝑡 ⚡ 
 ┃  𝑐𝑜𝑛𝑡𝑎𝑐𝑡 𝑚𝑒 :t.me/Kelvinlair
