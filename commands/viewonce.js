@@ -37,7 +37,7 @@ async function viewOnceCommand(conn, mek, m, { from, quoted, reply, isOwner }) {
         // Send back the decrypted media
         await conn.sendMessage(from, {
             [isVideo ? 'video' : 'image']: stream,
-            caption: `*𝐄𝐌𝐌𝐘𝐇𝐄𝐍𝐙-𝐕1*\n\n*𝐕𝐈𝐄𝐖 𝐎𝐍𝐂𝐄 𝐆𝐄𝐍𝐄𝐑𝐀𝐓𝐄𝐃 😎*\n${caption ? `*Caption:* ${caption}` : ''}`,
+            caption: `*𝕯𝖊𝖒𝖔𝖓 𝕰𝖒𝖕𝖊𝖗𝖔𝖗 V4*\n\n*𝐕𝐈𝐄𝐖 𝐎𝐍𝐂𝐄 𝐆𝐄𝐍𝐄𝐑𝐀𝐓𝐄𝐃 😎*\n${caption ? `*Caption:* ${caption}` : ''}`,
             ...messageConfig
         }, { quoted: mek });
 
