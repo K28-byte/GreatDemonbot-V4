@@ -1,46 +1,65 @@
-const isAdmin = require('../lib/isAdmin');
-
-async function handleKickCommand(client, message, args) {
+async function handleKickCommand(conn, mek, m, { reply, isGroup, groupMetadata, sender, quoted, mentionedJid }) {
     try {
-        // 1. Check admin status
-        const { isSenderAdmin, isBotAdmin } = await isAdmin(client, message);
-
-        // 2. Validate Bot Admin
-        if (!isBotAdmin) {
-            return await client.sendMessage(message.from, {
-                text: '❌ Please make me an admin first so I can remove members!'
-            }, { quoted: message });
+        // 1. Ensure the command is being run in a group chat
+        if (!isGroup) {
+            return reply("❌ This command can only be used in groups!");
         }
 
-        // 3. Validate Sender Admin
+        const participants = groupMetadata.participants || [];
+
+        // 2. Check if the user executing the command is an admin
+        const senderParticipant = participants.find(p => p.id === sender);
+        const isSenderAdmin = senderParticipant && (senderParticipant.admin || senderParticipant.superAdmin);
+        
         if (!isSenderAdmin) {
-            return await client.sendMessage(message.from, {
-                text: '❌ Only group admins can use this command!'
-            }, { quoted: message });
+            return reply("❌ Only group admins can use the kick command!");
         }
 
-        // 4. Find the target user (from mention or quoted message)
-        const targetUser = message.mentionedJid?.[0] || message.quoted?.participant;
+        // 3. Check if the bot itself is an admin
+        const botNumber = conn.user.id.split(':')[0] + '@s.whatsapp.net';
+        const botParticipant = participants.find(p => p.id === botNumber);
+        const isBotAdmin = botParticipant && (botParticipant.admin || botParticipant.superAdmin);
+
+        if (!isBotAdmin) {
+            return reply("❌ I need to be an admin in this group to kick members!");
+        }
+
+        // 4. Determine who to kick (from mentioned users or a quoted message)
+        let targetUser = null;
+
+        if (mentionedJid && mentionedJid.length > 0) {
+            targetUser = mentionedJid[0];
+        } else if (quoted && quoted.sender) {
+            targetUser = quoted.sender;
+        }
 
         if (!targetUser) {
-            return await client.sendMessage(message.from, {
-                text: '⚠️ Please tag or reply to the user you want to remove.'
-            }, { quoted: message });
+            return reply("❌ Please tag the user or reply to their message to kick them!\n_Example:_ `.kick @user`");
         }
 
-        // 5. Remove / Kick the user from the group
-        await client.groupParticipantsUpdate(message.from, [targetUser], 'remove');
+        // 5. Ensure the target is not an admin
+        const targetParticipant = participants.find(p => p.id === targetUser);
+        if (targetParticipant && (targetParticipant.admin || targetParticipant.superAdmin)) {
+            return reply("⚠️ I cannot banish an admin from the group!");
+        }
+
+        // 6. Send banishment/kick notification message
+        await conn.sendMessage(m.chat, {
+            text: `🚫 *BANISHMENT*\n\nRemoving user from the group...`
+        }, { quoted: mek });
+
+        // 7. Execute the kick action
+        await conn.groupParticipantsUpdate(m.chat, [targetUser], "remove");
+
+        // 8. Success confirmation message
+        await conn.sendMessage(m.chat, {
+            text: `✅ *Successfully Banished!*\n\nTarget has been removed from the group.`
+        }, { quoted: mek });
 
     } catch (error) {
-        console.error('Error executing kick command:', error);
-        await client.sendMessage(message.from, {
-            text: '❌ Failed to remove the user. Please try again later.'
-        }, { quoted: message });
+        console.error("Error in kick command:", error);
+        await reply(`❌ An error occurred while trying to banish the user: ${error.message || error}`);
     }
 }
 
-module.exports = {
-    name: 'kick',           // Command trigger name (e.g. .kick)
-    alias: ['remove', 'ban'], // Alternative triggers that do the same thing
-    code: handleKickCommand
-};
+module.exports = handleKickCommand;
