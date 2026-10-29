@@ -1,37 +1,48 @@
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
+const os = require('os');
 
-module.exports = {
-    name: 'alive',
-    alias: ['bot', 'status'],
-    category: 'general',
-    description: 'Check if Great Demon Bot is active.',
-    async execute(m, { conn, pushName }) {
-        const imagePath = path.join(__dirname, '../assets/demon.jpg');
-        const user = pushName || 'Warrior';
+module.exports = async (m, client) => {
+    try {
+        // Status text banner customized for your bot
+        const statusText = `
+╔═══════════◇◆◇══════════╗
+     ⚔️ 𝐆𝐑𝐄𝐀𝐓 𝐃𝐄𝐌𝐎𝐍 𝐁𝐎𝐓 𝐕𝟒 ⚔️
+╠────────────────────────╣
+║ 🟢 *Status*: Online
+║ ⚙️ *Version*: 4.0.0
+║ 🌍 *Mode*: Public
+╠────────────────────────╣
+║   *Bot Is Ready To Work*
+╠────────────────────────╣
+║💡 Type *.menu* to explore commands!
+╚═══════════◇◆◇══════════╝`.trim();
 
-        const caption = `
-╭─── ✦ 𝐆𝐑𝐄𝐀𝐓 𝐃𝐄𝐌𝐎𝐍 𝐁𝐎𝐓 𝐯𝟒 ✦ ───╮
-│
-│ 🌐 **Status:** Online & Active
-│ ⚙️ **Version:** 4.0.0
-│ 👑 **Creator:** Demon Emperor
-│ 👤 **User:** ${user}
-│
-│ *Bot Is Ready To Serve!*
-│
-│ 💡 Type *.menu* to explore commands!
-╰─────────────────────────────╯
-> *Powered by Great Demon Bot v4*
-`.trim();
+        // Your direct image link
+        const imageUrl = 'https://img.sanishtech.com/u/e5f4003640d7a47530cd191b781e1f5b.jpg';
+        const imagePath = path.join(os.tmpdir(), 'great_demon_alive.jpg');
 
-        if (fs.existsSync(imagePath)) {
-            await conn.sendMessage(m.chat, {
+        try {
+            const response = await axios({
+                url: imageUrl,
+                responseType: 'arraybuffer'
+            });
+            fs.writeFileSync(imagePath, response.data);
+
+            // Send image with caption
+            await client.sendMessage(m.chat, {
                 image: fs.readFileSync(imagePath),
-                caption: caption
+                caption: statusText
             }, { quoted: m });
-        } else {
-            await conn.sendMessage(m.chat, { text: caption }, { quoted: m });
+
+        } catch (imgError) {
+            // Fallback: Send plain text if image download fails
+            await client.sendMessage(m.chat, { text: statusText }, { quoted: m });
         }
+
+    } catch (error) {
+        console.error('Error in alive module:', error);
+        await client.sendMessage(m.chat, { text: '❌ Failed to load bot status.' }, { quoted: m });
     }
 };
