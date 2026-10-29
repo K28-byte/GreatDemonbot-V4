@@ -27,7 +27,5 @@ module.exports = {
     WARN_COUNT: 3,
     APIs: global.APIs,
     APIKeys: global.APIKeys, 
-    phoneNumber: "", // Don't Add If You Are Using Panel To Deploy
-    botName: "Demon Emperor Bot",
-    ownerName: "Demon Emperor"
+    phoneNumber: "" // Don't Add If You Are Using Panel To Deploy
 };
