@@ -19,12 +19,6 @@ const pmPermitConfigPath = path.join(__dirname, '../data/pmpermit.json');
 const pmUsersPath = path.join(__dirname, '../data/pmUsers.json');
 const premiumPath = path.join(__dirname, '../data/premium.json');
 
-// Ensure data directory exists
-const dataDir = path.join(__dirname, '../data');
-if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-}
-
 // Function to check if user is premium
 function isPremium(userId) {
     try {
@@ -33,9 +27,9 @@ function isPremium(userId) {
             return false;
         }
         
-        const premiumUsers = JSON.parse(fs.readFileSync(premiumPath, 'utf8'));
+        const premiumUsers = JSON.parse(fs.readFileSync(premiumPath));
         const userNumber = userId.split('@')[0];
-        return Array.isArray(premiumUsers) && premiumUsers.includes(userNumber);
+        return premiumUsers.includes(userNumber);
     } catch (error) {
         console.error('Error checking premium status:', error);
         return false;
@@ -47,16 +41,17 @@ if (!fs.existsSync(pmPermitConfigPath)) {
     fs.writeFileSync(pmPermitConfigPath, JSON.stringify({ 
         enabled: false, 
         maxCount: 3 
-    }, null, 2));
+    }));
 }
 
 if (!fs.existsSync(pmUsersPath)) {
-    fs.writeFileSync(pmUsersPath, JSON.stringify({}, null, 2));
+    fs.writeFileSync(pmUsersPath, JSON.stringify({}));
 }
 
 // PM Permit toggle command - PREMIUM ONLY
 async function pmpermitCommand(sock, chatId, msg, args) {
     try {
+        // Get sender ID
         const senderId = msg.key.participant || msg.key.remoteJid;
         
         // Check if user is premium or owner
@@ -71,18 +66,18 @@ async function pmpermitCommand(sock, chatId, msg, args) {
         // Check if sender is owner (for configuration)
         if (!msg.key.fromMe) {
             await sock.sendMessage(chatId, { 
-                text: '❌ 𝐓𝐡𝐢𝐬 𝐂𝐨𝐦𝐦𝐚𝐧𝐝 𝐂𝐚𝐧 𝐁𝐞 𝐔𝐬𝐞𝐝 𝐎𝐧𝐥𝐲 𝐁𝐲 𝐌𝐲 𝐎𝐰𝐧𝐞𝐫 𝐎𝐧𝐥𝐲!',
+                text: '❌ 𝐓𝐡𝐢𝐬 𝐂𝐨𝐦𝐦𝐚𝐧𝐝 𝐂𝐚𝐧 𝐁𝐞 𝐔𝐬𝐞𝐝 𝐎𝐧𝐥𝐲 𝐁𝐲 𝐌𝐲 𝐎𝐰𝐧𝐞𝐫 𝐎𝐧𝐥𝐲 𝑮𝒓𝒆𝒂𝒕 𝑫𝒆𝒎𝒐𝒏 🥶!',
                 ...channelInfo
             });
             return;
         }
 
-        let config = JSON.parse(fs.readFileSync(pmPermitConfigPath, 'utf8'));
+        let config = JSON.parse(fs.readFileSync(pmPermitConfigPath));
 
         if (!args || args.length === 0) {
             const status = config.enabled ? 'ON' : 'OFF';
             await sock.sendMessage(chatId, {
-                text: `🛡️ *PM PERMIT STATUS* (Premium Feature)\n\nStatus: ${status}\nMax Messages: ${config.maxCount}\n\n*Commands:*\n• .pmpermit on - Enable PM permit\n• .pmpermit off - Disable PM permit\n• .pmpermit 5 on - Set 5 message limit and enable\n• .pmapprove - Approve a user\n• .pmblock - Block a user`,
+                text: `🛡️ *IMPERIAL PM PERMIT STATUS* (Premium Feature)\n\nStatus: ${status}\nMax Messages: ${config.maxCount}\n\n*Commands:*\n• .pmpermit on - Enable PM permit\n• .pmpermit off - Disable PM permit\n• .pmpermit 5 on - Set 5 message limit and enable\n• .pmapprove - Approve a user\n• .pmblock - Block a user`,
                 ...channelInfo
             });
             return;
@@ -98,14 +93,14 @@ async function pmpermitCommand(sock, chatId, msg, args) {
                 config.maxCount = count;
                 if (arg2 === 'on') {
                     config.enabled = true;
-                    fs.writeFileSync(pmPermitConfigPath, JSON.stringify(config, null, 2));
+                    fs.writeFileSync(pmPermitConfigPath, JSON.stringify(config));
                     await sock.sendMessage(chatId, {
                         text: `✅ PM Permit enabled with ${count} message limit! (Premium Feature)`,
                         ...channelInfo
                     });
                 } else if (arg2 === 'off') {
                     config.enabled = false;
-                    fs.writeFileSync(pmPermitConfigPath, JSON.stringify(config, null, 2));
+                    fs.writeFileSync(pmPermitConfigPath, JSON.stringify(config));
                     await sock.sendMessage(chatId, {
                         text: `❌ PM Permit disabled (limit set to ${count})`,
                         ...channelInfo
@@ -123,14 +118,14 @@ async function pmpermitCommand(sock, chatId, msg, args) {
         // Handle on/off
         if (arg1 === 'on') {
             config.enabled = true;
-            fs.writeFileSync(pmPermitConfigPath, JSON.stringify(config, null, 2));
+            fs.writeFileSync(pmPermitConfigPath, JSON.stringify(config));
             await sock.sendMessage(chatId, {
                 text: `✅ PM Permit enabled with ${config.maxCount} message limit! (Premium Feature)`,
                 ...channelInfo
             });
         } else if (arg1 === 'off') {
             config.enabled = false;
-            fs.writeFileSync(pmPermitConfigPath, JSON.stringify(config, null, 2));
+            fs.writeFileSync(pmPermitConfigPath, JSON.stringify(config));
             await sock.sendMessage(chatId, {
                 text: `❌ PM Permit disabled`,
                 ...channelInfo
@@ -139,7 +134,7 @@ async function pmpermitCommand(sock, chatId, msg, args) {
             const count = parseInt(arg1);
             if (count > 0 && count <= 10) {
                 config.maxCount = count;
-                fs.writeFileSync(pmPermitConfigPath, JSON.stringify(config, null, 2));
+                fs.writeFileSync(pmPermitConfigPath, JSON.stringify(config));
                 await sock.sendMessage(chatId, {
                     text: `✅ PM Permit message limit set to ${count}`,
                     ...channelInfo
@@ -169,8 +164,10 @@ async function pmpermitCommand(sock, chatId, msg, args) {
 // PM Approve command - PREMIUM ONLY
 async function pmapproveCommand(sock, chatId, msg, args) {
     try {
+        // Get sender ID
         const senderId = msg.key.participant || msg.key.remoteJid;
         
+        // Check if user is premium or owner
         if (!isPremium(senderId) && !msg.key.fromMe) {
             await sock.sendMessage(chatId, { 
                 text: '❌ Sorry, PM Approve is a premium feature only!\n\n💎 Upgrade to premium to access this command.',
@@ -181,13 +178,15 @@ async function pmapproveCommand(sock, chatId, msg, args) {
 
         if (!msg.key.fromMe) {
             await sock.sendMessage(chatId, { 
-                text: '❌ 𝐓𝐡𝐢𝐬 𝐂𝐨𝐦𝐦𝐚𝐧𝐝 𝐂𝐚𝐧 𝐁𝐞 𝐔𝐬𝐞𝐝 𝐎𝐧𝐥𝐲 𝐁𝐲 𝐌𝐲 𝐎𝐰𝐧𝐞𝐫 𝐎𝐧𝐥𝐲!',
+                text: '❌ 𝐓𝐡𝐢𝐬 𝐂𝐨𝐦𝐦𝐚𝐧𝐝 𝐂𝐚𝐧 𝐁𝐞 𝐔𝐬𝐞𝐝 𝐎𝐧𝐥𝐲 𝐁𝐲 𝐌𝐲 𝐎𝐰𝐧𝐞𝐫 𝑮𝒓𝒆𝒂𝒕 𝑫𝒆𝒎𝒐𝒏 🥶!',
                 ...channelInfo
             });
             return;
         }
 
         const isGroup = chatId.endsWith('@g.us');
+        let userToApprove;
+
         if (isGroup) {
             await sock.sendMessage(chatId, {
                 text: '❌ This command can only be used in private chats.',
@@ -196,9 +195,11 @@ async function pmapproveCommand(sock, chatId, msg, args) {
             return;
         }
 
-        let pmUsers = JSON.parse(fs.readFileSync(pmUsersPath, 'utf8'));
-        pmUsers[chatId] = { approved: true, messageCount: 0 };
-        fs.writeFileSync(pmUsersPath, JSON.stringify(pmUsers, null, 2));
+        userToApprove = chatId;
+
+        let pmUsers = JSON.parse(fs.readFileSync(pmUsersPath));
+        pmUsers[userToApprove] = { approved: true, messageCount: 0 };
+        fs.writeFileSync(pmUsersPath, JSON.stringify(pmUsers));
 
         await sock.sendMessage(chatId, {
             text: '✅ You have been approved! You can now message freely. (Premium Feature)',
@@ -217,8 +218,10 @@ async function pmapproveCommand(sock, chatId, msg, args) {
 // PM Block command - PREMIUM ONLY
 async function pmblockCommand(sock, chatId, msg, args) {
     try {
+        // Get sender ID
         const senderId = msg.key.participant || msg.key.remoteJid;
         
+        // Check if user is premium or owner
         if (!isPremium(senderId) && !msg.key.fromMe) {
             await sock.sendMessage(chatId, { 
                 text: '❌ Sorry, PM Block is a premium feature only!\n\n💎 Upgrade to premium to access this command.',
@@ -229,7 +232,7 @@ async function pmblockCommand(sock, chatId, msg, args) {
 
         if (!msg.key.fromMe) {
             await sock.sendMessage(chatId, { 
-                text: '❌ 𝐓𝐡𝐢𝐬 𝐂𝐨𝐦𝐦𝐚𝐧𝐝 𝐂𝐚𝐧 𝐁𝐞 𝐔𝐬𝐞𝐝 𝐎𝐧𝐥𝐲 𝐁𝐲 𝐌𝐲 𝐎𝐰𝐧𝐞𝐫 𝐎𝐧𝐥𝐲!',
+                text: '❌ 𝐓𝐡𝐢𝐬 𝐂𝐨𝐦𝐦𝐚𝐧𝐝 𝐂𝐚𝐧 𝐁𝐞 𝐔𝐬𝐞𝐝 𝐎𝐧𝐥𝐲 𝐁𝐲 𝐌𝐲 𝐎𝐰𝐧𝐞𝐫 𝐎𝐧𝐥𝐲 𝑮𝒓𝒆𝒂𝒕 𝑫𝒆𝒎𝒐𝒏!',
                 ...channelInfo
             });
             return;
@@ -246,9 +249,9 @@ async function pmblockCommand(sock, chatId, msg, args) {
 
         await sock.updateBlockStatus(chatId, 'block');
         
-        let pmUsers = JSON.parse(fs.readFileSync(pmUsersPath, 'utf8'));
+        let pmUsers = JSON.parse(fs.readFileSync(pmUsersPath));
         delete pmUsers[chatId];
-        fs.writeFileSync(pmUsersPath, JSON.stringify(pmUsers, null, 2));
+        fs.writeFileSync(pmUsersPath, JSON.stringify(pmUsers));
 
         console.log(`Blocked user: ${chatId} (Premium Feature)`);
 
@@ -265,15 +268,16 @@ async function handlePmPermit(sock, chatId, msg, userMessage) {
 
         if (msg.key.fromMe) return true;
 
-        const config = JSON.parse(fs.readFileSync(pmPermitConfigPath, 'utf8'));
+        const config = JSON.parse(fs.readFileSync(pmPermitConfigPath));
         if (!config.enabled) return true;
 
+        // Check if the bot owner is premium (to use PM permit feature)
         const botOwnerId = sock.user?.id || 'unknown';
         if (!isPremium(botOwnerId)) {
-            return true; 
+            return true; // Allow all messages if owner isn't premium
         }
 
-        let pmUsers = JSON.parse(fs.readFileSync(pmUsersPath, 'utf8'));
+        let pmUsers = JSON.parse(fs.readFileSync(pmUsersPath));
 
         if (pmUsers[chatId] && pmUsers[chatId].approved) {
             return true;
@@ -287,7 +291,7 @@ async function handlePmPermit(sock, chatId, msg, userMessage) {
         const currentCount = pmUsers[chatId].messageCount;
         const remaining = config.maxCount - currentCount;
 
-        fs.writeFileSync(pmUsersPath, JSON.stringify(pmUsers, null, 2));
+        fs.writeFileSync(pmUsersPath, JSON.stringify(pmUsers));
 
         if (currentCount > config.maxCount) {
             await sock.sendMessage(chatId, {
@@ -298,7 +302,7 @@ async function handlePmPermit(sock, chatId, msg, userMessage) {
             await sock.updateBlockStatus(chatId, 'block');
             
             delete pmUsers[chatId];
-            fs.writeFileSync(pmUsersPath, JSON.stringify(pmUsers, null, 2));
+            fs.writeFileSync(pmUsersPath, JSON.stringify(pmUsers));
             
             return false;
         }
@@ -310,12 +314,12 @@ async function handlePmPermit(sock, chatId, msg, userMessage) {
             if (fs.existsSync(imagePath)) {
                 messageContent = {
                     image: fs.readFileSync(imagePath),
-                    caption: `🛡️ *PM PERMIT ACTIVATED* (Premium Feature)\n\nThank you for your message! My owner will reply shortly.\n\nYou have *${remaining}* messages left.\n\n⚠️ *Please do not spam, else you would get blocked!*\n\n_Message ${currentCount}/${config.maxCount}_\n\n💎 Protected by Premium Security`,
+                    caption: `🛡️ *IMPERIAL PM PERMIT ACTIVATED* (Premium Feature)\n\nThank you for your message! My owner will reply shortly.\n\nYou have *${remaining}* messages left.\n\n⚠️ *Please do not spam, else you would get blocked!*\n\n_Message ${currentCount}/${config.maxCount}_\n\n💎 Protected by Premium Security`,
                     ...channelInfo
                 };
             } else {
                 messageContent = {
-                    text: `🛡️ *PM PERMIT ACTIVATED* (Premium Feature)\n\nThank you for your message! My owner will reply shortly.\n\nYou have *${remaining}* messages left.\n\n⚠️ *Please do not spam, else you would get blocked!*\n\n_Message ${currentCount}/${config.maxCount}_\n\n💎 Protected by Premium Security`,
+                    text: `🛡️ *IMPERIAL PM PERMIT ACTIVATED* (Premium Feature)\n\nThank you for your message! My owner will reply shortly.\n\nYou have *${remaining}* messages left.\n\n⚠️ *Please do not spam, else you would get blocked!*\n\n_Message ${currentCount}/${config.maxCount}_\n\n💎 Protected by Premium Security`,
                     ...channelInfo
                 };
             }
@@ -323,7 +327,7 @@ async function handlePmPermit(sock, chatId, msg, userMessage) {
             await sock.sendMessage(chatId, messageContent);
         } catch (imageError) {
             await sock.sendMessage(chatId, {
-                text: `🛡️ *PM PERMIT ACTIVATED* (Premium Feature)\n\nThank you for your message! My owner will reply shortly.\n\nYou have *${remaining}* messages left.\n\n⚠️ *Please do not spam, else you would get blocked!*\n\n_Message ${currentCount}/${config.maxCount}_\n\n💎 Protected by Premium Security`,
+                text: `🛡️ *IMPERIAL PM PERMIT ACTIVATED* (Premium Feature)\n\nThank you for your message! My owner will reply shortly.\n\nYou have *${remaining}* messages left.\n\n⚠️ *Please do not spam, else you would get blocked!*\n\n_Message ${currentCount}/${config.maxCount}_\n\n💎 Protected by Premium Security`,
                 ...channelInfo
             });
         }
@@ -338,7 +342,7 @@ async function handlePmPermit(sock, chatId, msg, userMessage) {
 
 function isPmPermitEnabled() {
     try {
-        const config = JSON.parse(fs.readFileSync(pmPermitConfigPath, 'utf8'));
+        const config = JSON.parse(fs.readFileSync(pmPermitConfigPath));
         return config.enabled;
     } catch (error) {
         return false;
