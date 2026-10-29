@@ -7,23 +7,20 @@ async function textMakerCommand(sock, chatId, message, args, commandName) {
 
         if (!text) {
             await sock.sendMessage(chatId, { 
-                text: '✦ 𝚻𝐰𝐢𝐧𝐤𝐥𝐢𝐧𝐠 𝚯𝐫𝐢𝐥𝐥𝐢𝐚𝐧𝐜𝐞 ✦\n\n*Please provide text for the textmaker command, Demon Emperor.*' 
+                text: '𝕯𝖊𝖒𝖔𝖓 𝕰𝖒𝖕𝖊𝖗𝖔𝖗 👑\n\n*Please provide text for the textmaker command.*' 
             }, { quoted: message });
             return;
         }
 
         await sock.sendMessage(chatId, { 
-            text: '✦ 𝚻𝐰𝐢𝐧𝐤𝐥𝐢𝐧𝐠 𝚯𝐫𝐢𝐥𝐥𝐢𝐚𝐧𝐜𝐞 ✦\n\n*Generating your request...*' 
+            text: '𝕯𝖊𝖒𝖔𝖓 𝕰𝖒𝖕𝖊𝖗𝖔𝖗 👑\n\n*Forging your request into existence...*' 
         }, { quoted: message });
 
-        // Example generation using mumaker (e.g., textpro or ephoto effect)
         let imageUrl;
         try {
-            // Mapping common text effect based on command or default
             const result = await mumaker.textpro('https://textpro.me/neon-light-text-effect-online-882.html', text);
             imageUrl = result.image;
         } catch (e) {
-            // Fallback or alternative generator
             const result = await mumaker.ephoto('https://en.ephoto360.com/create-digital-glitter-text-effects-online-777.html', text);
             imageUrl = result.image;
         }
@@ -34,13 +31,13 @@ async function textMakerCommand(sock, chatId, message, args, commandName) {
 
         await sock.sendMessage(chatId, {
             image: { url: imageUrl },
-            caption: '𝕯𝖊𝖒𝖔𝖓 𝕰𝖒𝖕𝖊𝖗𝖔𝖗 ✦ 𝚻𝐰𝐢𝐧𝐤𝐥𝐢𝐧𝐠 𝚯𝐫𝐢𝐥𝐥𝐢𝐚𝐧𝐜𝐞 ✦'
+            caption: '𝕯𝖊𝖒𝖔𝖓 𝕰𝖒𝖕𝖊𝖗𝖔𝖗 🖤'
         }, { quoted: message });
 
-    } catch (error) {
+    } catch (error)  {
         console.error('Error in textmaker command:', error);
         await sock.sendMessage(chatId, { 
-            text: `✦ 𝚻𝐰𝐢𝐧𝐤𝐥𝐢𝐧𝐠 𝚯𝐫𝐢𝐥𝐥𝐢𝐚𝐧𝐜𝐞 ✦\n\n*An error occurred while generating your request, Demon Emperor.*\nError: ${error.message}` 
+            text: `𝕯𝖊𝖒𝖔𝖓 𝕰𝖒𝖕𝖊𝖗𝖔𝖗 👑\n\n*An error occurred while forging your request.*\nError: ${error.message}` 
         }, { quoted: message });
     }
 }
