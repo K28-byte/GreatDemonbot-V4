@@ -9,11 +9,7 @@ async function downloadMediaMessage(message, mediaType) {
     for await (const chunk of stream) {
         buffer = Buffer.concat([buffer, chunk]);
     }
-    const tempDir = path.join(__dirname, '../temp/');
-    if (!fs.existsSync(tempDir)) {
-        fs.mkdirSync(tempDir, { recursive: true });
-    }
-    const filePath = path.join(tempDir, `${Date.now()}.${mediaType}`);
+    const filePath = path.join(__dirname, '../temp/', `${Date.now()}.${mediaType}`);
     fs.writeFileSync(filePath, buffer);
     return filePath;
 }
@@ -22,12 +18,12 @@ async function tagCommand(sock, chatId, senderId, messageText, replyMessage) {
     const { isSenderAdmin, isBotAdmin } = await isAdmin(sock, chatId, senderId);
 
     if (!isBotAdmin) {
-        await sock.sendMessage(chatId, { text: '𝗟𝗮𝗱𝘆_𝗕𝗲𝗹𝗹𝗮🎀 has to be an admin first.' });
+        await sock.sendMessage(chatId, { text: '𝑮𝒓𝒆𝒂𝒕 𝑫𝒆𝒎𝒐𝒏 𝑩𝒐𝒕 𝑽4🥶 has to be an admin first.' });
         return;
     }
 
     if (!isSenderAdmin) {
-        const stickerPath = './assets/sticktag.webp';  // Path to sticker for non-admins
+        const stickerPath = './assets/sticktag.webp';  // Path to your sticker
         if (fs.existsSync(stickerPath)) {
             const stickerBuffer = fs.readFileSync(stickerPath);
             await sock.sendMessage(chatId, { sticker: stickerBuffer });
