@@ -3,427 +3,312 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demon Emperor Bot - Pairing Portal</title>
+    <title>Thanks for Deploying Emmy Henz Bot</title>
     <style>
-        :root {
-            --bg-color: #050508;
-            --card-bg: #12121a;
-            --accent-pink: #ff0055;
-            --accent-purple: #bf00ff;
-            --text-main: #ffffff;
-            --text-muted: #c5c5d2;
-            --border-color: rgba(255, 0, 85, 0.2);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Courier New', Courier, monospace;
         }
-
+        
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            min-height: 100vh;
+            background-color: #0a0a16;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px;
-            overflow-x: hidden;
-        }
-
-        .main-container {
-            width: 100%;
-            max-width: 480px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding-bottom: 80px;
-        }
-
-        /* Header */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 5px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: var(--text-main);
-        }
-
-        .logo-area span {
-            color: var(--accent-pink);
-            text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
-        }
-
-        .sign-in-btn {
-            background: var(--accent-pink);
-            color: white;
-            border: none;
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(255, 0, 85, 0.4);
-        }
-
-        /* Cards */
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .hero-card h1 {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-            color: var(--text-main);
-        }
-
-        .hero-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            box-shadow: 0 0 10px rgba(255, 0, 85, 0.4);
-        }
-
-        .hero-card p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .stat-box {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 12px 10px;
-            text-align: center;
-        }
-
-        .stat-box .icon {
-            font-size: 1.2rem;
-            margin-bottom: 5px;
-        }
-
-        .stat-box .number {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--text-main);
-        }
-
-        .stat-box .label {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-
-        /* Form elements */
-        .section-title {
-            font-size: 1rem;
-            font-weight: bold;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--text-main);
-        }
-
-        .input-group {
-            margin-bottom: 12px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px 15px;
-            background: #09090e;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            color: white;
-            font-size: 0.95rem;
-            outline: none;
-        }
-
-        .input-group input:focus {
-            border-color: var(--accent-purple);
-            box-shadow: 0 0 10px rgba(191, 0, 255, 0.3);
-        }
-
-        .terms-text {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .terms-text a {
-            color: var(--accent-pink);
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-            border: none;
-            border-radius: 10px;
-            color: white;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
-            transition: transform 0.2s;
-        }
-
-        .btn-primary:active {
-            transform: scale(0.98);
-        }
-
-        /* Result Display Box */
-        #result {
-            margin-top: 15px;
-            text-align: center;
-            font-size: 1rem;
-        }
-
-        .code-display-box {
-            background: #09090e;
-            border: 2px solid #00ffcc;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 10px;
-        }
-
-        .code-display-box .pairing-code {
-            font-size: 1.6rem;
-            color: #00ffcc;
-            font-weight: bold;
-            letter-spacing: 2px;
-            margin: 8px 0;
-            word-break: break-all;
-        }
-
-        .code-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .code-actions button {
-            flex: 1;
-            padding: 8px;
-            border-radius: 6px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .btn-copy { background: #00ffcc; color: #000; }
-        .btn-close { background: #333; color: #fff; }
-
-        /* Floating Chat / Support Widget */
-        .floating-widget {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            z-index: 100;
-        }
-
-        .chat-bubble {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 10px 15px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            margin-bottom: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            max-width: 200px;
-            display: none;
-        }
-
-        .fab-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--accent-pink);
-            border: none;
-            color: white;
-            font-size: 1.3rem;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(255, 0, 85, 0.6);
-            display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            perspective: 1000px;
         }
-
-        /* Footer links */
-        .footer-links {
+        
+        .container {
             text-align: center;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 20px;
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+        }
+        
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+        
+        .text-container {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2rem;
+            opacity: 0;
+            transform: translateY(50px);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+            animation: fadeIn 2s forwards 0.5s;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(50px);
+            color: #00ffff;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            animation: fadeIn 2s forwards 1s;
+        }
+        
+        .bot-name {
+            font-size: 3.5rem;
+            color: #ff00ff;
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+            display: block;
+            margin-top: 1rem;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: zoomIn 2s forwards 2s;
+        }
+        
+        .message {
+            font-size: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
             line-height: 1.6;
+            opacity: 0;
+            animation: fadeIn 3s forwards 3s;
+        }
+        
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 100px rgba(0, 255, 255, 0.2);
+            animation: pulse 8s infinite alternate;
+        }
+        
+        .circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -150px;
+            animation-delay: 0s;
+        }
+        
+        .circle:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            bottom: -250px;
+            right: -250px;
+            animation-delay: 1s;
+            background: rgba(255, 0, 255, 0.1);
+            box-shadow: 0 0 100px rgba(255, 0, 255, 0.2);
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes zoomIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(0.8);
+                opacity: 0.6;
+            }
+        }
+        
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(0, 255, 255, 1), 0 0 30px rgba(0, 255, 255, 0.5);
+            }
+            100% {
+                text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+            }
+        }
+        
+        .completed {
+            animation: glow 3s infinite;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .bot-name {
+                font-size: 2.5rem;
+            }
+            
+            .message {
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .bot-name {
+                font-size: 1.8rem;
+            }
+            
+            .message {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-
-    <div class="main-container">
-        <!-- Header -->
-        <header>
-            <div class="logo-area">
-                👑 <span>DEMON EMPEROR</span>
-            </div>
-            <button class="sign-in-btn">Sign in</button>
-        </header>
-
-        <!-- Hero Card -->
-        <div class="card hero-card">
-            <span class="hero-badge">⚡ DEMON EMPEROR V4 Free</span>
-            <h1>Deploy Bot Free</h1>
-            <p>Deploy and manage your WhatsApp bot instantly from one dashboard. Premium features & zero setup required.</p>
-            
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <div class="icon">🤖</div>
-                    <div class="number">2,322</div>
-                    <div class="label">Bots Paired</div>
-                </div>
-                <div class="stat-box">
-                    <div class="icon">🖥️</div>
-                    <div class="number">159</div>
-                    <div class="label">Servers</div>
-                </div>
-                <div class="stat-box">
-                    <div class="icon">⚡</div>
-                    <div class="number">46</div>
-                    <div class="label">Free Slots</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Generate Pairing Code Card -->
-        <div class="card">
-            <div class="section-title">
-                <span>🎛️</span> Generate Pairing Code
-            </div>
-            
-            <div class="input-group">
-                <label>Phone Number (With Country Code)</label>
-                <input type="text" id="phone" placeholder="e.g. 2348123456789">
-            </div>
-
-            <div class="terms-text">
-                By continuing you accept our <a href="#">Privacy Policy</a> and <a href="#">Terms & Conditions</a>.
-            </div>
-
-            <button class="btn-primary" onclick="getCode()">⚡ Generate Pairing Code</button>
-
-            <div id="result"></div>
-        </div>
-
-        <!-- Footer Info -->
-        <div class="footer-links">
-            <p>Demon Emperor V4 free, plus automation tools and a live community — all on one account.</p>
-            <p style="margin-top: 10px;">© 2026 Demon Emperor. All rights reserved.</p>
+    <div id="particles-js"></div>
+    
+    <div class="circle"></div>
+    <div class="circle"></div>
+    
+    <div class="container">
+        <div class="text-container">
+            <h1>Thank You</h1>
+            <h2>For Deploying</h2>
+            <span class="bot-name">𝑮𝒓𝒆𝒂𝒕 𝑫𝒆𝒎𝒐𝒏-𝑽4</span>
+            <p class="message">Your deployment was successful. We appreciate your trust in our service. The bot is now ready to assist you with amazing features!</p>
         </div>
     </div>
 
-    <!-- Floating Support Widget -->
-    <div class="floating-widget">
-        <div class="chat-bubble" id="chatBubble">Need help pairing your bot? Tap here!</div>
-        <button class="fab-btn" onclick="toggleChat()">🤖</button>
-    </div>
-
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // Toggle helper chat bubble
-        function toggleChat() {
-            const bubble = document.getElementById('chatBubble');
-            bubble.style.display = bubble.style.display === 'block' ? 'none' : 'block';
-        }
-
-        // Request Pairing Code from backend pair.js route
-        async function getCode() {
-            const phoneInput = document.getElementById('phone').value.trim();
-            const resultDiv = document.getElementById('result');
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                particles: {
+                    number: {
+                        value: 80,
+                        density: {
+                            enable: true,
+                            value_area: 800
+                        }
+                    },
+                    color: {
+                        value: "#ffffff"
+                    },
+                    shape: {
+                        type: "circle",
+                        stroke: {
+                            width: 0,
+                            color: "#000000"
+                        }
+                    },
+                    opacity: {
+                        value: 0.5,
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 1,
+                            opacity_min: 0.1,
+                            sync: false
+                        }
+                    },
+                    size: {
+                        value: 3,
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 2,
+                            size_min: 0.3,
+                            sync: false
+                        }
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#00ffff",
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false,
+                        attract: {
+                            enable: false,
+                            rotateX: 600,
+                            rotateY: 1200
+                        }
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: {
+                            enable: true,
+                            mode: "grab"
+                        },
+                        onclick: {
+                            enable: true,
+                            mode: "push"
+                        },
+                        resize: true
+                    },
+                    modes: {
+                        grab: {
+                            distance: 140,
+                            line_linked: {
+                                opacity: 1
+                            }
+                        },
+                        push: {
+                            particles_nb: 4
+                        }
+                    }
+                },
+                retina_detect: true
+            });
             
-            if (!phoneInput) {
-                resultDiv.innerHTML = "<p style='color: #ff3333; margin-top: 10px;'>⚠️ Please enter your phone number with country code!</p>";
-                return;
-            }
-
-            resultDiv.innerHTML = "<p style='color: var(--accent-pink); margin-top: 15px;'>⏳ Establishing connection across realms...</p>";
-
-            try {
-                // Calls the /code endpoint hosted by your pair.js router
-                const response = await fetch(`/code?number=${encodeURIComponent(phoneInput)}`);
-                const data = await response.json();
-
-                const pairingCode = data.code || data.pairingCode;
-
-                if (pairingCode) {
-                    resultDiv.innerHTML = `
-                        <div class="code-display-box">
-                            <div style="font-size: 0.8rem; color: #888;">YOUR PAIRING CODE</div>
-                            <div class="pairing-code" id="codeText">${pairingCode}</div>
-                            <div class="code-actions">
-                                <button class="btn-copy" onclick="copyCode('${pairingCode}')">Copy</button>
-                                <button class="btn-close" onclick="clearResult()">Close</button>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    resultDiv.innerHTML = `<p style='color: #ff3333; margin-top: 10px;'>⚠️ ${data.error || data.message || "Failed to generate code. Try again."}</p>`;
-                }
-            } catch (err) {
-                resultDiv.innerHTML = "<p style='color: #ff3333; margin-top: 10px;'>❌ Connection error. Verify your backend server is active.</p>";
-            }
-        }
-
-        function copyCode(code) {
-            navigator.clipboard.writeText(code);
-            alert("Pairing code copied to clipboard!");
-        }
-
-        function clearResult() {
-            document.getElementById('result').innerHTML = '';
-        }
+            
+            setTimeout(() => {
+                document.querySelector('h1').classList.add('completed');
+                document.querySelector('h2').classList.add('completed');
+                document.querySelector('.bot-name').classList.add('completed');
+            }, 5000);
+        });
     </script>
 </body>
 </html>
