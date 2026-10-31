@@ -1,0 +1,86 @@
+const { default: makeWASocket, useMultiFileAuthState } = require('@whiskeysockets/baileys');
+const express = require('express');
+const pino = require('pino');
+const app = express();
+const PORT = process.env.PORT || 7860;
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+let pairingCode = null;
+let botStatus = "Ready for phone number";
+
+async function startPairingSocket(phoneNumber) {
+    try {
+        const { state, saveCreds } = await useMultiFileAuthState('./temp_auth');
+        const sock = makeWASocket({
+            auth: state,
+            logger: pino({ level: 'silent' }),
+            printQRInTerminal: false
+        });
+
+        sock.ev.on('creds.update', saveCreds);
+
+        if (!sock.authState.creds.registered) {
+            setTimeout(async () => {
+                try {
+                    let code = await sock.requestPairingCode(phoneNumber);
+                    pairingCode = code?.match(/.{1,4}/g)?.join('-') || code;
+                    botStatus = "Code Generated Successfully!";
+                } catch (err) {
+                    botStatus = "Error: " + err.message;
+                }
+            }, 3000);
+        }
+    } catch (err) {
+        botStatus = "Socket Error: " + err.message;
+    }
+}
+
+app.get('/', (req, res) => {
+    res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Imperial Pairing Portal</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body { background: #0f0f13; color: #fff; font-family: system-ui, sans-serif; text-align: center; padding: 20px; }
+                .card { background: #1a1a24; border: 1px solid #333; border-radius: 12px; padding: 25px; max-width: 400px; margin: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+                h2 { color: #e63946; margin-top: 0; }
+                input { width: 90%; padding: 12px; margin: 12px 0; border-radius: 6px; border: 1px solid #444; background: #252533; color: #fff; font-size: 16px; text-align: center; outline: none; }
+                button { width: 95%; padding: 12px; border-radius: 6px; border: none; background: #e63946; color: #fff; font-weight: bold; font-size: 16px; cursor: pointer; }
+                .code { font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #2ecc71; background: #000; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px dashed #2ecc71; }
+            </style>
+        </head>
+        <body>
+            <div class="card">
+                <h2>👑 Demon Bot Pairing Portal</h2>
+                <p>Status: <b>${botStatus}</b></p>
+                ${pairingCode ? `
+                    <p>Enter this code in WhatsApp:</p>
+                    <div class="code">${pairingCode}</div>
+                ` : `
+                    <form action="/pair" method="POST">
+                        <input type="text" name="number" placeholder="2347061696819" required />
+                        <button type="submit">Get Pairing Code</button>
+                    </form>
+                `}
+            </div>
+        </body>
+        </html>
+    `);
+});
+
+app.post('/pair', async (req, res) => {
+    const num = req.body.number?.replace(/[^0-9]/g, '');
+    if (num) {
+        botStatus = "Requesting code for " + num + "...";
+        startPairingSocket(num);
+    }
+    res.redirect('/');
+});
+
+app.listen(PORT, () => {
+    console.log(`Imperial Pairing Server live on port ${PORT}`);
+});
